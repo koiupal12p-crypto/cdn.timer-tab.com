@@ -1,23 +1,23 @@
 name: Google Indexing API
 
 on:
-  workflow_dispatch: # يتيح لك التشغيل يدوياً بضغطة زر
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install google-api-python-client google-auth
+        run: pip install requests google-auth
 
-      - name: Run Indexing Script
+      - name: Run script
         run: python index.py
