@@ -20,4 +20,4 @@ jobs:
           pip install google-api-python-client google-auth
 
       - name: Run Indexing Script
-        run: python index_now.py
+        run: python index.py
