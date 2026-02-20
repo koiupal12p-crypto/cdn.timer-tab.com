@@ -1,0 +1,23 @@
+name: Google Indexing Manual Run
+
+on:
+  workflow_dispatch: # هذا يسمح لك بتشغيله يدوياً بضغطة زر
+
+jobs:
+  indexing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          pip install oauth2client httplib2 google-api-python-client
+
+      - name: Run Google Indexer
+        run: python indexer.py
