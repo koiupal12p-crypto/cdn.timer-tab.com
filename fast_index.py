@@ -5,39 +5,53 @@ from oauth2client.service_account import ServiceAccountCredentials
 import httplib2
 import time
 
-# الإعدادات
 SITEMAP_URL = "https://cdn.timer-tab.com/map-root.xml"
-JSON_KEY_FILE = "anyq-488010-76c7d406dc22.json" # تأكد أن هذا هو نفس اسم الملف في الصورة
+JSON_KEY_FILE = "anyq-488010-76c7d406dc22.json"
 SCOPES = ["https://www.googleapis.com/auth/indexing"]
 
-def get_urls_from_sitemap(url):
-    response = requests.get(url)
-    root = ET.fromstring(response.content)
-    # فك تشفير روابط خريطة الموقع (namespace)
-    urls = [node.text for node in root.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
-    return urls
+def get_urls(url):
+    try:
+        response = requests.get(url)
+        root = ET.fromstring(response.content)
+        ns = {'ns': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        
+        # إذا كانت الخريطة تحتوي على خرائط أخرى (Sitemap Index)
+        sitemaps = root.findall(".//ns:sitemap/ns:loc", ns)
+        if sitemaps:
+            all_links = []
+            for sm in sitemaps:
+                all_links.extend(get_urls(sm.text))
+            return all_links
+        
+        # إذا كانت خريطة روابط مباشرة
+        return [node.text for node in root.findall(".//ns:url/ns:loc", ns)]
+    except Exception as e:
+        print(f"❌ خطأ في قراءة الخريطة: {e}")
+        return []
 
-def send_to_google(url, http_auth):
-    endpoint = "https://indexing.googleapis.com/v3/urlNotifications:publish"
-    content = json.dumps({"url": url, "type": "URL_UPDATED"})
-    response, content_body = http_auth.request(endpoint, method="POST", body=content)
-    return response.status
+def run():
+    print("🔍 سحب الروابط بعمق...")
+    all_urls = list(set(get_urls(SITEMAP_URL))) # حذف المتكرر
+    print(f"✅ تم العثور على {len(all_urls)} رابط إجمالي.")
 
-# بدء العمل
-print("🔍 سحب الروابط من خريطة الموقع...")
-all_urls = get_urls_from_sitemap(SITEMAP_URL)
-print(f"✅ تم العثور على {len(all_urls)} رابط.")
+    if not all_urls: return
 
-# حصة جوجل هي 200 رابط يومياً لكل حساب خدمة
-to_index = all_urls[:200] 
+    try:
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(JSON_KEY_FILE, SCOPES)
+        http_auth = credentials.authorize(httplib2.Http())
+        
+        # أخذ أول 200 رابط لم يتم أرشفتهم (أو أول 200 فقط حالياً)
+        to_index = all_urls[:200] 
 
-credentials = ServiceAccountCredentials.from_json_keyfile_name(JSON_KEY_FILE, SCOPES)
-http_auth = credentials.authorize(httplib2.Http())
+        for i, url in enumerate(to_index):
+            endpoint = "https://indexing.googleapis.com/v3/urlNotifications:publish"
+            data = json.dumps({"url": url, "type": "URL_UPDATED"})
+            response, content = http_auth.request(endpoint, method="POST", body=data)
+            print(f"[{i+1}] Status {response.status} - {url}")
+            time.sleep(0.5)
+            
+    except Exception as e:
+        print(f"💥 خطأ تقني في المفتاح أو الاتصال: {e}")
 
-print("🚀 إرسال أول 200 رابط للأرشفة القسرية...")
-for i, url in enumerate(to_index):
-    status = send_to_google(url, http_auth)
-    print(f"[{i+1}/200] Status {status} - {url}")
-    time.sleep(0.5) # حماية من الحظر
-
-print("🎉 انتهت الدفعة الأولى! كرر العملية غداً للـ 200 التالية.")
+if name == "main":
+    run()
